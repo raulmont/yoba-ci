@@ -1,0 +1,6 @@
+---
+- hosts: linuxacademy
+  remote_user: cloud_user
+  tasks:
+    - name: Test if the server can be reached
+      ping:
