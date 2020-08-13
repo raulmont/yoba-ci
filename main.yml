@@ -1,6 +1,25 @@
 ---
 - hosts: linuxacademy
   remote_user: cloud_user
+  become: true
+  vars:
+    default_container_image: ubuntu
+    default_container_name: wrl18_{{ 9999999999999999999999 | random | to_uuid }}
+    #default_container_name: wrl18_{{ ansible_date_time.iso8601_micro | to_uuid }}
+    default_container_command: whoami
+  
   tasks:
-    - name: Test if the server can be reached
-      ping:
+    - name: Create container name
+      debug:
+        msg: The container name is {{ default_container_name }}
+    - name: Create container
+      docker_container:
+        name: "{{ default_container_name }}"
+        image: "{{ default_container_image }}"
+        command: "{{ default_container_command }}"
+        state: present
+
+    - name: Remove container {{ default_container_name }}
+      docker_container:
+        name: "{{ default_container_name }}"
+        state: absent
